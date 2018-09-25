@@ -13,4 +13,9 @@
     <string name="subject_kosong">Subject tidak boleh kosong</string>
     <string name="email_tujuan_kosong">Email tujuan tidak boleh kosong</string>
     <string name="intent_send">Send Intent</string>
+    <string name="pilih_nomor">Pilih nomor tujuan</string>
+    <string name="masukkan_pesan">Masukkan pesan</string>
+    <string name="pilih_aplikasi">Pilih Aplikasi</string>
+    <string name="mengirim">Mengirim pesan</string>
+    <string name="gagal_mengirim">Gagal mengirim pesan</string>
 </resources>
