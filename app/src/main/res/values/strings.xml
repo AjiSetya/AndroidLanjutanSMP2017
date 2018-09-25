@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Android Lanjutan</string>
+    <string name="email">Email</string>
+    <string name="sms">SMS</string>
+    <string name="record_sound">Record Sound</string>
+    <string name="tts">Text to Speech</string>
+    <string name="stt">Speech to Text</string>
+    <string name="camera">Camera</string>
+    <string name="subject">Subject</string>
+    <string name="send_to">Send To</string>
+    <string name="pesan">Message</string>
+    <string name="btn_send">Send</string>
+    <string name="subject_kosong">Subject tidak boleh kosong</string>
+    <string name="email_tujuan_kosong">Email tujuan tidak boleh kosong</string>
+    <string name="intent_send">Send Intent</string>
+</resources>
