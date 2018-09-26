@@ -18,4 +18,8 @@
     <string name="pilih_aplikasi">Pilih Aplikasi</string>
     <string name="mengirim">Mengirim pesan</string>
     <string name="gagal_mengirim">Gagal mengirim pesan</string>
+    <string name="play">Play</string>
+    <string name="record">Record</string>
+    <string name="stop_record">Stop Record</string>
+    <string name="stop_play">Stop Play</string>
 </resources>
