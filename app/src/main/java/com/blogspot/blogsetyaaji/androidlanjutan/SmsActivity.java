@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
@@ -44,12 +45,31 @@ public class SmsActivity extends AppCompatActivity {
             edSmsPesan.setError(getString(R.string.masukkan_pesan));
             edSmsPesan.requestFocus();
         } else {
-            // membuka aplikasi sms menggunakan intent
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra("sms_body", edSmsPesan.getText().toString());
-            intent.putExtra("address", edSmsTo.getText().toString());
-            intent.setType("vnd.android-dir/mms-sms");
-            startActivity(intent);
+            // jika versi android lebih atau sama dengan kitkat
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                // ambil nama package aplikasi default untuk pesan
+                String defaultSmsPackageName = Telephony.Sms.getDefaultSmsPackage(this);
+
+                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                sendIntent.setType("text/plain");
+                sendIntent.putExtra("sms_body", edSmsPesan.getText().toString());
+                sendIntent.putExtra("address", edSmsTo.getText().toString());
+
+                // jika package aplikasi sms tidak kosong, maka kirim intent langsung ke aplikasi tersebut
+                if (defaultSmsPackageName != null) {
+                    sendIntent.setPackage(defaultSmsPackageName);
+                }
+
+                startActivity(sendIntent);
+            } else {
+                // kode untuk android di bawah kitkat
+                // membuka aplikasi sms menggunakan intent
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.putExtra("sms_body", edSmsPesan.getText().toString());
+                intent.putExtra("address", edSmsTo.getText().toString());
+                intent.setType("vnd.android-dir/mms-sms");
+                startActivity(intent);
+            }
         }
     }
 
@@ -72,7 +92,7 @@ public class SmsActivity extends AppCompatActivity {
                         null, null);
                 clearForm();
                 Toast.makeText(this, getString(R.string.mengirim), Toast.LENGTH_SHORT).show();
-            } catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(this, getString(R.string.gagal_mengirim), Toast.LENGTH_SHORT).show();
             }
         }

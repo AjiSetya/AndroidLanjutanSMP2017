@@ -22,4 +22,14 @@
     <string name="record">Record</string>
     <string name="stop_record">Stop Record</string>
     <string name="stop_play">Stop Play</string>
+    <string name="htts">Type text</string>
+    <string name="saytts">Speak</string>
+    <string name="lang_not_found">Bahasa tidak ditemukan</string>
+    <string name="tts_error">Initialize error</string>
+    <string name="hstt">Speech result</string>
+    <string name="writestt">Proccess Speech</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="share">Share Image</string>
+    <string name="camera_error">Camera Error</string>
+    <string name="dir_error">Failde to make directory folder</string>
 </resources>
