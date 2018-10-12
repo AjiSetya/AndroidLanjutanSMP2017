@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,11 +17,16 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -94,9 +100,10 @@ public class CameraActivity extends AppCompatActivity {
 
     private Uri getOutputFileUri(int fotoCode) {
         // mengambil direktori file berupa URI
-        return FileProvider.getUriForFile(CameraActivity.this,
-                BuildConfig.APPLICATION_ID + ".provider",
-                getOutputNamaFile(fotoCode));
+        return Uri.fromFile(getOutputNamaFile(fotoCode));
+        //return FileProvider.getUriForFile(CameraActivity.this,
+                //BuildConfig.APPLICATION_ID + ".provider",
+                //getOutputNamaFile(fotoCode));
     }
 
     private File getOutputNamaFile(int fotoCode) {
@@ -155,6 +162,79 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    // TODO: 10/10/2018 menampilkan gambar ke imageview
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // ambil data sesuai request code yang diberikan
+        if (requestCode == REQUEST_CODE_CAMERA){
+            // tampilkan foto di imageview
+            tampilFoto();
+        } else if (resultCode == RESULT_CANCELED){
+            // jika user batal memilih aplikasi camera
+            Toast.makeText(this, "Batal mengambil foto", Toast.LENGTH_SHORT).show();
+        } else {
+            // jika gagal menampilkan gambar/gagal menampilkan aplikasi camera
+            Toast.makeText(this, "Gagal mengambil foto", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void tampilFoto() {
+        // ambil lokasi foto
+        Uri fotoUri = Uri.parse(pathFoto);
+        // ambil file
+        File file = new File(fotoUri.getPath());
+
+        // cek apakah file ada
+        if (file.exists()) {
+            // jika dile ditemukan maka ambil file
+            try {
+                InputStream fileFoto = new FileInputStream(file);
+                // tampilkan foto di image view
+                imgFoto.setImageBitmap(BitmapFactory.decodeStream(fileFoto));
+            } catch (FileNotFoundException e) {
+                // jika percobaan gagal
+                Toast.makeText(this, "Failed to get file", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // jika file tidak ditemukan
+            imgFoto.setImageResource(0);
+            pathFoto = null;
+            Toast.makeText(this, "Foto tidak ditemukan", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // tampilkan menu pada action bar
+        getMenuInflater().inflate(R.menu.menu_camera, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // tampung id menunya
+        int id = item.getItemId();
+
+        // jika yang dipilih adalah menu share
+        if (id == R.id.mn_share) {
+            // cek keberadaan gambar
+            if (pathFoto == null){
+                Toast.makeText(this, "Foto belum tersedia", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (imgFoto.getDrawable() == null){
+                Toast.makeText(this, "Foto belum tersedia", Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("image/*");
+                // berikan lokasi foto ke intent
+                intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                // tampilkan aplikasi yang akan dikirim foto
+                startActivity(intent.createChooser(intent, "Share photo"));
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }
